@@ -11,3 +11,5 @@
 4. Run the `build.bat` file.
 
 5. If the build is successful, you will find the executable in the `dist` folder.
+
+Note: You may edit the code of the `build.bat` and the `mysbrowse.py`, however you need to edit some name-specific code.
