@@ -1,0 +1,8 @@
+os
+sys
+pickle
+PyQt5
+PyQt5-Qt5
+PyQt5-sip
+PyQtWebEngine
+PyQtWebEngine-Qt5
