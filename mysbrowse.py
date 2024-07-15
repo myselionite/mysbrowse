@@ -128,22 +128,40 @@ class MysBrowse(QMainWindow):
         self.tabs.currentWidget().setUrl(QUrl(url))
         input_text = self.url_bar.text()
         if input_text:
-            # If the input is a URL, navigate to it
             url = QUrl(input_text)
-            if not url.scheme():
-                # If no scheme is provided, assume it's a search query and redirect to Google search
-                search_query = '+'.join(input_text.split())
-                search_url = QUrl(f"https://www.google.com/search?q={search_query}")
-                self.tabs.currentWidget().setUrl(search_url)
-            else:
-                # If it's a valid URL, navigate to it
+            
+            # Check if the input text is a valid URL
+            if url.isValid() and url.scheme() in ['http', 'https', 'ftp']:
+                # If it's a valid URL with http, https, or ftp scheme
                 self.tabs.currentWidget().setUrl(url)
+            elif not url.scheme() and ('.' in input_text):
+                # If there's a dot but no scheme, prepend 'https://'
+                # Check if it contains a space and a dot
+                if ' ' not in input_text or ('.' in input_text and ' ' in input_text):
+                    # If it contains a dot and not just a search term with spaces
+                    url = QUrl(f"https://google.com/search?q={input_text}")
+                    self.tabs.currentWidget().setUrl(url)
+                else:
+                    # If it contains spaces but not a dot, treat it as a search query
+                    search_query = '+'.join(input_text.split())
+                    search_url = QUrl(f"https://www.google.com/search?q={search_query}")
+                    self.tabs.currentWidget().setUrl(search_url)
+            else:
+                # For cases where input might be just a query without a dot or scheme
+                if ' ' in input_text:
+                    search_query = '+'.join(input_text.split())
+                    search_url = QUrl(f"https://www.google.com/search?q={search_query}")
+                    self.tabs.currentWidget().setUrl(search_url)
+                else:
+                    # If none of the above, treat it as a search query
+                    search_query = '+'.join(input_text.split())
+                    search_url = QUrl(f"https://www.google.com/search?q={search_query}")
+                    self.tabs.currentWidget().setUrl(search_url)
         else:
             # If no input is provided, navigate to the default search engine
             search_query = '+'.join("MysBrowse")
             search_url = QUrl(f"https://www.google.com/search?q={search_query}")
             self.tabs.currentWidget().setUrl(search_url)
-
     def clear_url_bar(self):
         # Clear the contents of the URL bar on click
         self.url_bar.clear()
